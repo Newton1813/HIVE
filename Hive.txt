@@ -240,8 +240,65 @@ j) DATE_ADD( string date, int days ) : The DATE_ADD function adds the number of 
 k)DATE_SUB( string date, int days ) :The DATE_SUB function subtracts the number of days to the specified date
 
               Example: DATE_SUB('2000-03-01', 5) returns ‘2000-02-25’
-       
-	   
+			  
+1) UNION 
+2) UNION ALL
+3) MX,MIN,AVG 
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++			 
+
+a) UNION ALL : Supports by HIVE with Similar functionalities .(Merges all the records from all table )
+b) UNION : Support by HIVE with Similar functionalities .(Removes duplicate record)
+
+Supports join just like SQL.
+
+a)Inner Join
+b)Left Outer Join
+c)Right Outer Join
+d)Full Outer Join
+ 
+			  
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+DATA DEFINITION LANGUAGE
+=========================
+
+a) CREATE STATEMENT:
+ -------------------
+  
+  
+ To create a table  we use the  
+ 
+ > CREATE [EXTERNAL] TABLE [TABLE NAME] (
+    COL1 <DATATYPE>,
+	COL2 <DATATYPE>,
+	COLN <DATATYPE>)
+	PARTITIONED INTO (COL <DATATYPE>)
+	ROW FORAMAT DELIMITED
+	FIELDS TERMINATED BY ','
+	LINES TERMIANTED BY '/n'
+	LOCATION '/user/warehouse';
+	
+	
+	
+b) ALTER STATEMENT:
+-------------------
+
+i) Rename :To rename the table name .
+
+               ALTER TABLE <TABLE NAME> RENAME to <NEW TABLE NAME>;
+			   
+ii) ADD :  TO add the columne in the structutre of table.
+
+               ALTER TABLE <TABLE NAME> ADD  COLUMNS(<COL-NAME> <DATATYPE>)
+			   
+		   To add the comment also we can use 
+		       
+			    ALTER TABLE <TABALE_NAME> ADD COLUMNS (<NEW_COLUMN_NAME> <DATATYPE> COMMENT 'A COMMENT');
+iii) REPLACE: 
+                  				
+				ALTER TABLE <TABALE_NAME> replaCE COLUMNS (<COL1> <DATATYPE>,<COL2> <DATATYPE> )
+		
 
 
 
