@@ -1,0 +1,450 @@
+Partition 
+
+1)Dynamic Partitioning in Hive
+
+a) first we have to set the properties before applying for dynamic partitioning.
+
+set hive.exec.dynamic.partition.mode = nonstrict;
+
+insert into table salesdata partition (date_of_sale) select salesperson_id,product_id,date_of_sale from d_table ;--(here it will automatically partition the as 
+per the partition column  dynamically)
+
+
+b)To extend the number of partitioning in hive,we have to set the properties of hive
+
+set hive.exec.max.dynamic.partitions = 10000;
+
+set hive.exec.max.dynamic.partitions.pernode = 3000;
+
+
+a1) External Partitioned Tables
+
+ alter table salesdata_ext drop partition (date_of_sale=10-27-2017) ; (external table)
+
+1. alter table salesdata partition (date_of_sale=10-27-2017) rename to partition (date_of_sale=10-27-2018);
+
+
+msck repair table salesdata_ext;
+
+show partitions salesdata_ext;
+O/p:
+date_of_sale=10-27-2017
+
+
+alter table salesdata_ext add partition (date_of_sale=’10-27-2017’);
+show partitions salesdata_ext;
+O/p:
+date_of_sale=10-27-2017
+
+
+https://www.coursera.org/lecture/big-data-analysis/hive-optimization-partitioning-bucketing-and-sampling-v7Gjl
+
+
+STRING FUNCTION
+===============
+
+1)UPPER( string str ), UCASE( string str ):  The UPPER or UCASE function converts the string in uppper case letter.
+   
+   UPPER('hive') returns HIVE.
+   
+   
+ 2)TRIM : It trims both trialing and leading space from the string.
+   
+    TRIM('   hive   ') returns 'hive'
+	
+	
+3) SUBSTR( string source_str, int start_position [,int length]  ),  SUBSTRING( string source_str, int start_position [,int length]  )
+   
+   The SUBSTR or SUBSTRING function returns a part of the source string from the start position with the specified length of characters.
+   If the length is not given, then it returns from the start position to the end of the string.
+   
+    SUBSTR('hadoop',4) returns 'oop'
+    SUBSTR('hadoop',4,2) returns 'oo'
+	
+	
+4) SPLIT( string str, string pat ) :The SPLIT function splits the string around the pattern pat and returns an array of strings. You can specify 
+                                    regular expressions as patterns.
+        Example: SPLIT('hive:hadoop',':') returns ["hive","hadoop"]
+		
+		
+5) SPACE( int number_of_spaces ):  The SPACE function returns the specified number of spaces.
+
+      Example: SPACE(4) returns 
+	  
+
+6) RTRIM( string str ) : The RTRIM function removes all the leading spaces from the string.
+     
+	  Example: LTRIM('hive   ') returns 'hive'
+	  
+	  
+7) REVERSE( string str ): The REVERSE function gives the reversed string.
+
+    Example: REVERSE('hive') returns 'evih'
+	
+
+8) RPAD( string str, int len, string pad ) :  The RPAD function returns the string with a length of len characters right-padded with pad.
+
+    Example: RPAD('hive',6,'v') returns 'hivevv'
+	
+	
+9) REPEAT( string str, int n ) : The REPEAT function repeats the specified string n times.
+
+     Example: REPEAT('hive',2) returns 'hivehive'
+	 
+
+10) LTRIM( string str ) : The LTRIM function removes all the trailing spaces from the string.
+
+    Example: LTRIM('   hive') returns 'hive'
+	
+	
+11) LPAD( string str, int len, string pad ) : The LPAD function returns the string with a length of len characters left-padded with pad.
+
+    Example: LPAD('hive',6,'v') returns 'vvhive'
+	
+
+12) LOWER( string str ),  LCASE( string str ) : The LOWER or LCASE function converts the string into lower case letters.
+
+     Example: LOWER('HiVe') returns 'hive'
+	 
+13) LENGTH( string str ) : The LENGTH function returns the number of characters in a string.
+
+     Example: LENGTH('hive') returns 4
+	 
+14) FIND_IN_SET( string search_string, string source_string_list ) : The FIND_IN_SET function searches for the search string in the source_string_list 
+                                                                      and returns the position of the first occurrence in the source string list. Here 
+																	  the source string list should be comma delimited one. It returns 0 if the first argument 
+																	  contains comma.
+																	  
+																	        Example: FIND_IN_SET('ha','hao,mn,hc,ha,hef') returns 4
+																			
+15) CONCAT_WS( string delimiter, string str1, string str2... ) : The CONCAT_WS function is similar to the CONCAT function. Here you can also provide the delimiter, which can 
+                                                                 be used in between the strings to concat.
+																 
+																 
+					Example: CONCAT_WS('-','hadoop','hive') returns 'hadoop-hive'
+					
+16) CONCAT( string str1, string str2... ) : The CONCAT function concatenates all the stings.
+                      
+					   Example: CONCAT('hadoop','-','hive') returns 'hadoop-hive'
+					   
+
+17) ASCII( string str ) :The ASCII function converts the first character of the string into its numeric ascii value.
+
+            Example1: ASCII('hadoop') returns 104
+            Example2: ASCII('A') returns 65
+     
+
+
+CONDITIONAL FUNCTION IN HIVE
+============================
+Hive supports three types of conditional functions. These functions are listed below:
+
+A) IF( Test Condition, True Value, False Value ) : The IF condition evaluates the “Test Condition” and if the “Test Condition” is true, then it returns the 
+                                                   “True Value”. Otherwise, it returns the False Value.
+												   
+	Example: IF(1=1, 'working', 'not working') returns 'working'
+	
+B) COALESCE( value1,value2,... ) : The COALESCE function returns the fist not NULL value from the list of values. If all the values in the list are NULL,
+                                   then it returns NULL.
+								   
+								   
+								   Example: COALESCE(NULL,NULL,5,NULL,4) returns 5
+								   
+C) CASE STATEMENT:  
+
+
+CASE   [ expression ]
+       WHEN condition1 THEN result1
+       WHEN condition2 THEN result2
+       ...
+       WHEN conditionn THEN resultn
+       ELSE result
+END
+
+
+CASE   Fruit
+       WHEN 'APPLE' THEN 'The owner is APPLE'
+       WHEN 'ORANGE' THEN 'The owner is ORANGE'
+       ELSE 'It is another Fruit'
+END
+
+The other form of CASE is
+
+CASE
+       WHEN Fruit = 'APPLE' THEN 'The owner is APPLE'
+       WHEN Fruit = 'ORANGE' THEN 'The owner is ORANGE'
+       ELSE 'It is another Fruit'
+
+END
+
+
+
+
+DATE FUNTIONS:
+===============
+
+
+
+A) TO_DATE( string timestamp ) :The TO_DATE function returns the date part of the timestamp in the format 'yyyy-MM-dd'.
+
+
+                 Example: TO_DATE('2000-01-01 10:20:30') returns '2000-01-01'
+				 
+
+B) YEAR( string date ): The YEAR function returns the year part of the date.
+
+                 Example: YEAR('2000-01-01 10:20:30') returns 2000
+				 
+
+c) MONTH( string date ) : The MONTH function returns the month part of the date.
+
+                 Example: YEAR('2000-03-01 10:20:30') returns 3
+				 
+
+d) DAY( string date ), DAYOFMONTH( date ) : The DAY or DAYOFMONTH function returns the day part of the date.
+
+
+                 Example: DAY('2000-03-01 10:20:30') returns 1
+				 
+
+e) HOUR( string date ): The HOUR function returns the hour part of the date.
+
+                 Example: HOUR('2000-03-01 10:20:30') returns 10
+				 
+
+f) MINUTE( string date ) : The MINUTE function returns the minute part of the timestamp.
+  
+                Example: MINUTE('2000-03-01 10:20:30') returns 20
+				
+
+g) SECOND( string date ) : The SECOND function returns the second part of the timestamp.
+ 
+                Example: SECOND('2000-03-01 10:20:30') returns 30
+				
+
+h)WEEKOFYEAR( string date ) : The WEEKOFYEAR function returns the week number of the date.
+
+                Example: WEEKOFYEAR('2000-03-01 10:20:30') returns 9
+				
+
+i) DATEDIFF( string date1, string date2 ): The DATEDIFF function returns the number of days between the two given dates.
+
+               Example: DATEDIFF('2000-03-01', '2000-01-10')  returns 51
+			   
+
+j) DATE_ADD( string date, int days ) : The DATE_ADD function adds the number of days to the specified date.
+
+               Example: DATE_ADD('2000-03-01', 5) returns '2000-03-06' 
+			   
+
+k)DATE_SUB( string date, int days ) :The DATE_SUB function subtracts the number of days to the specified date
+
+              Example: DATE_SUB('2000-03-01', 5) returns ‘2000-02-25’
+			  
+1) UNION 
+2) UNION ALL
+3) MX,MIN,AVG 
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++			 
+
+a) UNION ALL : Supports by HIVE with Similar functionalities .(Merges all the records from all table )
+b) UNION : Support by HIVE with Similar functionalities .(Removes duplicate record)
+
+Supports join just like SQL.
+
+a)Inner Join
+b)Left Outer Join
+c)Right Outer Join
+d)Full Outer Join
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+a) Hive supports several file formats:
+
+	i)  Text File
+	ii) SequenceFile
+	iii)RCFile
+	iv) Avro Files
+	v)  ORC Files
+	vi) Parquet
+	vii)Custom INPUTFORMAT and OUTPUTFORMAT
+	
+	
+	
+======================================================
+
+    i)  Text File :  	
+	ii) SequenceFile
+	iii)RCFile
+	iv) Avro Files
+	v)  ORC Files
+	vi) Parquet
+	vii)Custom INPUTFORMAT and OUTPUTFORMAT
+
+			  
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+DATA DEFINITION LANGUAGE
+=========================
+
+a) CREATE STATEMENT:
+ -------------------
+  
+  
+ To create a table  we use the  
+ 
+ > CREATE [EXTERNAL] TABLE [TABLE NAME] (
+    COL1 <DATATYPE>,
+	COL2 <DATATYPE>,
+	COLN <DATATYPE>)
+	PARTITIONED INTO (COL <DATATYPE>)
+	ROW FORAMAT DELIMITED
+	FIELDS TERMINATED BY ','
+	LINES TERMIANTED BY '/n'
+	LOCATION '/user/warehouse';
+	
+	
+	
+b) ALTER STATEMENT:
+-------------------
+
+i) Rename :To rename the table name .
+
+               ALTER TABLE <TABLE NAME> RENAME to <NEW TABLE NAME>;
+			   
+ii) ADD :  TO add the columne in the structutre of table.
+
+               ALTER TABLE <TABLE NAME> ADD  COLUMNS(<COL-NAME> <DATATYPE>)
+			   
+		   To add the comment also we can use 
+		       
+			    ALTER TABLE <TABALE_NAME> ADD COLUMNS (<NEW_COLUMN_NAME> <DATATYPE> COMMENT 'A COMMENT');
+iii) REPLACE: 
+                  				
+				ALTER TABLE <TABALE_NAME> replaCE COLUMNS (<COL1> <DATATYPE>,<COL2> <DATATYPE> )
+		
+
+
+===============================================================================================================================================================================
+
+1). What are the differences between -copyFromLocal and -put command
+
+Ans: Basically, both put and copyFromLocal fulfill similar purposes, but there are some differences. First, see what both the command does   
+     - put: it can copy the file from source to destination
+     – copyFromLocal: It copies the file from local file system to Hadoop system
+
+As you saw, put can do what copyFromLocal is doing but the reverse is not true. So the main difference between -copyFromLocal and -put commands is,
+ in -copyFromLocal, the source has to be the local file system which is not mandatory for –put command.
+
+Uses of these commands-
+--------------------------
+
+hadoop fs -copyFromLocal <localsrc> URI
+
+hadoop fs -put <localsrc> … <destination>
+
+
+2) What are the differences between -copyToLocal and -put command
+
+Ans: The answer will be similar to what I explained in the above question. The only difference is, there it was –copyFromLocal and here it is –copyToLocal.
+
+     So in –copyToLocal command, the destination has to be the local file system.
+
+
+
+3) What is the default block size in Hadoop and can it be increased?
+
+Ans: The default block size in Hadoop 1 is 64 MB while in Hadoop 2, it is 128MB.It can be increased as per your requirements. You can check Hadoop Terminology 
+     for more details.
+
+     In fact changing the block size is very easy and you can do it by setting fs.local.block.size in the configuration file easily. Use the below command to 
+	 change the default block size in Hadoop.
+	 
+	 hadoop fs -D fs.local.block.size= sizeinKB -put local_name remote_location
+
+
+Just put the size you want of a block in KB in place of “sizeinKB” variable.
+
+4) What is CBO in HIVE?
+
+Ans  :  CBO is cost-based optimization and applies to any database or any tool where optimization can be used.So it is similar to what you call 
+        Hive Query optimization. Here are the few parameters, you need to take care while dealing with CBO in Hive.
+
+      Parse and validate query
+      Generate possible execution plans
+      For each logically equivalent plan, assign a cost.
+	  
+	  
+5) How will you optimize Hive performance?
+
+There are various ways to run Hive queries faster -
+
+Using Apache Tez execution engine
+Using vectorization
+Using ORCFILE
+Do cost based query optimization.
+
+
+6) What are the different components of a Hive architecture?
+
+Ans) Hive Architecture consists of a –
+
+User Interface – UI component of the Hive architecture calls the execute interface to the driver.
+
+Driver create a session handle to the query and sends the query to the compiler to generate an execution plan for it.
+
+Metastore - Sends the metadata to the compiler for the execution of the query on receiving the sendMetaData request.
+
+Compiler- Compiler generates the execution plan which is a DAG of stages where each stage is either a metadata operation, a map or reduce 
+job or an operation on HDFS.
+
+Execute Engine- Execution engine is responsible for submitting each of these stages to the relevant components by managing the dependencies
+ between the various stages in the execution plan generated by the compiler.
+
+7)) What is ObjectInspector functionality?
+
+ObjectInspector is used to analyse the structure of individual columns and the internal structure of the row objects. ObjectInspector in Hive
+ provides access to complex objects which can be stored in multiple formats.
+
+ 
+ 
+CREATE DATABASE IF NOT EXISTS myhivebook
+      > COMMENT 'hive database demo'
+      > LOCATION '/hdfs/directory'
+      > WITH DBPROPERTIES ('creator'='dayongd','date'='2018-05-01');
+	  
+	  
+d) Show the current database:
+      > SELECT current_database();
+      +----------+
+      | _c0      |
+      +----------+
+      | default  |
+      +----------+
+      1 row selected (0.218 seconds)
+	  
+e)       > DROP DATABASE IF EXISTS myhivebook;--failed when database is 
+      not empty
+      > DROP DATABASE IF EXISTS myhivebook CASCADE;--drop database and 
+      tables
+Hive databases/tables are directories/subdirectories in HDFS. In order to remove the database directory, we need to remove the subdirectories 
+(for tables) first. By default, the database cannot be dropped if it is not empty, unless the CASCADE option is specified. With this option, 
+it drops all tables in the database automatically before dropping the database.	  
+
+
+
+      > ALTER DATABASE myhivebook SET DBPROPERTIES ('edited-
+      by'='Dayong');
+      > ALTER DATABASE myhivebook SET OWNER user dayongd;
+      > ALTER DATABASE myhivebook SET LOCATION '/tmp/data/myhivebook';
+	  
+	  
+	  
+	  
+	  
+
+
+
